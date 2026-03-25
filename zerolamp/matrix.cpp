@@ -5,23 +5,34 @@ CRGB leds[NUM_LEDS];
 
 void matrix_init() {
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
-  FastLED.setBrightness(16);
+  FastLED.setBrightness(32);
+
   if (CURRENT_LIMIT > 0) {
     FastLED.setMaxPowerInVoltsAndMilliamps(5, CURRENT_LIMIT);
   }
-  FastLED.setCorrection(TypicalLEDStrip);
 
-  // optional: clear all led's to ensure that they don't continue representing the state after the firmware stopped or crashed
+  FastLED.setCorrection(TypicalLEDStrip);
   FastLED.clear(true);
 }
 
+#ifdef ROW_MATRIX
+inline int ledId(int y, int x) {
+  // Added rotation 90°
+  int newY = x;
+  int newX = MATRIX_WIDTH - 1 - y;
+  return newY * MATRIX_WIDTH + newX;
+}
+#endif
+
+#ifdef SNAKE_MATRIX
 inline int ledId(int y, int x) {
   if (x % 2 == 0) {
     // led's numbered from top to bottom
     return MATRIX_HEIGHT * x + y;
   }
-  return MATRIX_HEIGHT * x + MATRIX_HEIGHT - 1 - y; // mirror along the y axis
+  return MATRIX_HEIGHT * x + MATRIX_HEIGHT - 1 - y;  // mirror along the y axis
 }
+#endif
 
 void matrix_setLedColor(int y, int x, CRGB color) {
   assert(y >= 0);

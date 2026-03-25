@@ -34,3 +34,7 @@
 # Grammax
 Parser.h
 Parser_debug.txt
+
+# Folders
+ui
+terminal
