@@ -37,4 +37,5 @@ Parser_debug.txt
 
 # Folders
 ui
-terminal
+# terminal
+terminal/node_modules

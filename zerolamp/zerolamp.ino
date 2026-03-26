@@ -2,12 +2,17 @@
 #include "wlan.h"
 #include "bluetooth.h"
 #include "program_controller.h"
+#include "build_options.h"  // siakinnik - added
 
 #include <FastLED.h>
 #include <esp_sleep.h>
 
-#define TOUCH_BUTTON_PIN 7  // (TTP223)
+// siakinnik - moved to build_options
+// #ifdef ZEROLAMP_S3V1
+// #define TOUCH_BUTTON_PIN 7  // deep-sleep button (TTP223)
+// #endif
 
+#ifdef ZEROLAMP_S3V1
 void go_to_sleep() {
   Serial.println("Going to deep sleep...");
 
@@ -24,12 +29,15 @@ void go_to_sleep() {
   Serial.flush();
   esp_deep_sleep_start();
 }
+#endif
 
 void setup() {
   Serial.begin(115200);
   delay(200);
 
+#ifdef ZEROLAMP_S3V1
   pinMode(TOUCH_BUTTON_PIN, INPUT);
+#endif
 
   Serial.println("Initializing ZeroLamp...");
 
@@ -46,6 +54,7 @@ void setup() {
 }
 
 void loop() {
+#ifdef ZEROLAMP_S3V1
   // Button
   if (digitalRead(TOUCH_BUTTON_PIN) == HIGH) {
     delay(50);
@@ -54,6 +63,7 @@ void loop() {
       go_to_sleep();
     }
   }
+#endif
 
   bluetooth_tick();
   wlan_tick();

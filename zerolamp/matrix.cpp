@@ -5,7 +5,10 @@ CRGB leds[NUM_LEDS];
 
 void matrix_init() {
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
-  FastLED.setBrightness(32);
+  // siakinnik - removed
+  // FastLED.setBrightness(16);
+
+  FastLED.setBrightness(MATRIX_BRIGHTNES);
 
   if (CURRENT_LIMIT > 0) {
     FastLED.setMaxPowerInVoltsAndMilliamps(5, CURRENT_LIMIT);

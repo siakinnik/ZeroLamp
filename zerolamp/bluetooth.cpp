@@ -32,13 +32,16 @@ void BLESerialWrapper::printf(const char* fmt, ...) {
   println(String(buffer));
 }
 
-// Websocet event 
+// Websocet event
+// ChatGPT!!!
 void webSocketEvent(uint8_t client_num, WStype_t type, uint8_t* payload, size_t length) {
   if (type == WStype_CONNECTED) {
     clientAuthorized = false;
+    incoming_line = "";
     webSocket.sendTXT(client_num, "Enter connection code:");
   } else if (type == WStype_TEXT) {
-    String msg = String((char*)payload);
+    String msg = "";
+    for (size_t i = 0; i < length; i++) msg += (char)payload[i];
     msg.trim();
 
     if (!clientAuthorized) {
@@ -51,18 +54,9 @@ void webSocketEvent(uint8_t client_num, WStype_t type, uint8_t* payload, size_t 
       }
       return;
     }
-    for (unsigned int i = 0; i < msg.length(); i++) {
-      char c = msg[i];
-      if (c == '\r') continue;
-      if (c == '\n') {
-        if (incoming_line.length() > 0) {
-          program_controller_handle_command(incoming_line.c_str());
-          incoming_line = "";
-        }
-      } else {
-        incoming_line += c;
-      }
-    }
+
+    program_controller_handle_command(std::string(msg.c_str()));
+
   } else if (type == WStype_DISCONNECTED) {
     clientAuthorized = false;
     incoming_line = "";
