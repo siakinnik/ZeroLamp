@@ -6,8 +6,8 @@
 #ifndef BUILD_OPTIONS_H
 #define BUILD_OPTIONS_H
 
-#define LEGACY_ZEROLAMP true
-// #define ZEROLAMP_S3V1 true
+#define LEGACY_ZEROLAMP 
+// #define ZEROLAMP_S3V1 
 
 #ifdef ZEROLAMP_S3V1
 #define TOUCH_BUTTON_PIN 7  // deep-sleep button (TTP223)

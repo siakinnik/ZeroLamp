@@ -1,4 +1,5 @@
 #include "bluetooth.h"
+#include "JWT.h" // siakinnik - added
 #include <WiFi.h>
 #include "program_controller.h"
 #include <cstdarg>
@@ -7,7 +8,7 @@
 // extern const char* WLAN_SSID;
 // extern const char* WLAN_PASSWORD;
 
-//WebSocket
+// WebSocket
 WebSocketsServer webSocket(81);
 
 String incoming_line;
@@ -33,11 +34,22 @@ void BLESerialWrapper::printf(const char* fmt, ...) {
 }
 
 // Websocet event
-// ChatGPT!!!
+// ChatGPT parts!!!
 void webSocketEvent(uint8_t client_num, WStype_t type, uint8_t* payload, size_t length) {
   if (type == WStype_CONNECTED) {
+    Serial.printf("Client %u connected\n", client_num);
     clientAuthorized = false;
     incoming_line = "";
+
+    // siakinnik - added
+    connectionCode = String(random(1000, 9999));
+    Serial.print("Connection code: ");
+    Serial.println(connectionCode);
+    String cmd1 = "fg 16";
+    String cmd2 = "w |" + connectionCode + "|";
+    program_controller_handle_command(std::string(cmd1.c_str()));
+    program_controller_handle_command(std::string(cmd2.c_str()));
+
     webSocket.sendTXT(client_num, "Enter connection code:");
   } else if (type == WStype_TEXT) {
     String msg = "";
@@ -48,9 +60,24 @@ void webSocketEvent(uint8_t client_num, WStype_t type, uint8_t* payload, size_t 
       if (msg == connectionCode) {
         clientAuthorized = true;
         webSocket.sendTXT(client_num, "Authorized! Send commands.");
+
+        // siakinnik - added
+        // siakinnik TODO - put original fg size and mode
+        String cmd1 = "fg 6";
+        String cmd2 = "fg clock";
+        program_controller_handle_command(std::string(cmd1.c_str()));
+        program_controller_handle_command(std::string(cmd2.c_str()));
+
       } else {
         webSocket.sendTXT(client_num, "Wrong code. Disconnecting...");
         webSocket.disconnect(client_num);
+
+        // siakinnik - added
+        // siakinnik TODO - put original fg size and mode
+        String cmd1 = "fg 6";
+        String cmd2 = "fg clock";
+        program_controller_handle_command(std::string(cmd1.c_str()));
+        program_controller_handle_command(std::string(cmd2.c_str()));
       }
       return;
     }
@@ -71,9 +98,10 @@ void bluetooth_init() {
     }
   }
 
-  connectionCode = String(random(1000, 9999));
-  Serial.print("Connection code: ");
-  Serial.println(connectionCode);
+  // siakinnik - removed
+  // connectionCode = String(random(1000, 9999));
+  // Serial.print("Connection code: ");
+  // Serial.println(connectionCode);
 
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);

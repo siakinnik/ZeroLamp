@@ -11,6 +11,15 @@ struct BLESerialWrapper {
     void printf(const char* fmt, ...);
 };
 
+// siakinnik - added
+// struct WSClientInit {
+//     uint8_t client_num;
+//     unsigned long connectTime; 
+//     bool authorized;
+// };
+
+const unsigned long INIT_TIMEOUT = 2000; 
+
 void bluetooth_init();
 void bluetooth_tick();
 BLESerialWrapper* bluetooth_serial();
