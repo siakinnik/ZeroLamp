@@ -3,6 +3,7 @@
 #include <cassert>
 #include "font.h"
 #include "wlan.h"
+#include <ctime>
 
 void ClockMode::enter(int logical_width, int logical_height) {
   this->logical_width = logical_width;

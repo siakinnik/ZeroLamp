@@ -4,6 +4,11 @@
 #include "mode.h"
 #include <FastLED.h>
 
+// siakinnik - added
+#define MONOTONE
+#define CENTER_VISIBLE 2
+#define FONT_WIDTH 3 
+
 class InfoMode : public LampMode {
 
 private:
