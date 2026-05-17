@@ -1,5 +1,9 @@
 # ZeroLamp
 
+<img width="240" height="320" alt="image" src="https://github.com/user-attachments/assets/944838e6-bf32-46ca-b142-0eb1b922bc8c" />
+<img width="240" height="320" alt="image" src="https://github.com/user-attachments/assets/92ee6429-2c0b-4d20-95a2-9c80f8fb8c93" />
+
+
 ZeroBone's ESP32-based smart lamp project.
 
 ## 📦 Dependencies / Arduino Libraries
